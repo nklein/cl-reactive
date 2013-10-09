@@ -24,6 +24,9 @@ important distinction between the two are that one can explicitly set
 the signal value of a signal variable while one cannot do the same for
 a signal function.
 
+Constants and functions can be used in place of signals in most places
+that expect a signal.
+
 ## Basic Signal Manipulations
 
 The fundamental building blocks for all signal operations are:
@@ -38,7 +41,11 @@ method.
 
     (signal-value sig) => current value of the signal
 
-If `SIG` is a signal-variable, one can set the signal value with
+Calling `SIGNAL-VALUE` with `SIG` calls the function with no arguments
+and returns that value.  Calling `SIGNAL-VALUE` with `SIG` a constant
+(or anything other than a function or signal) returns that constant.
+
+If `SIG` is a signal variable, one can set the signal value with
 `SETF`:
 
     (setf (signal-value sig) new-signal-value)
@@ -55,12 +62,14 @@ of the corresponding `SIGNAL`.  For example, given signals `SIG1` and
 might do something like:
 
     (with-signal-values ((v1 sig1)
-                         (v2 sig2))
+                         (v2 sig2)
+                         (v3 5))
       (incf v1)
-      (+ v1 v2))
+      (+ v1 v2 v3))
 
 The `WITH-SIGNAL-VALUES` macro here uses `SYMBOL-MACROLET` to bind
-`V1` to the value of `SIG1` and `V2` to the value of `SIG2`.
+`V1` to the value of `SIG1`, `V2` to the value of `SIG2`, and `V3` to
+the value of `5`.
 
 ### Defining Signal Variables
 
@@ -215,3 +224,8 @@ would likely not reflect all of those updates.
 The `SIGNAL-IF` function takes three arguments: `SIG-COND`, `SIG-TRUE`, and `SIG-FALSE`.  It returns a signal function whose value is that of `SIG-TRUE` if `SIG-COND` is non-NIL and the value of `SIG-FALSE` otherwise.
 
     (defun signal-if (sig-cond sig-true sig-false &key documentation) ...)
+
+It is often convenient to use a constant value in place of either
+`SIG-TRUE` or `SIG-FALSE` (or both):
+
+    (signal-if sig-cond :yes :no)

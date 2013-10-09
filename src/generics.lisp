@@ -3,13 +3,24 @@
 (in-package #:cl-reactive)
 
 (defgeneric signal-value (sig)
+  (:method (sig) sig)
+  (:method ((sig function)) (funcall sig))
   (:documentation "Retrieve the current value of the signal SIG."))
+
 (defgeneric (setf signal-value) (value sig)
   (:documentation "Set the current value of the signal SIG."))
 
+(defgeneric signal-type (sig)
+  (:method (sig) (type-of sig))
+  (:method ((fn function)) t)
+  (:documentation "Retrieve the type specifier for the given signal"))
+
 (defgeneric add-signal-dependent (sig dep)
+  (:method (sig dep) (declare (ignore sig dep)) nil)
   (:documentation "Internal:  Add DEP to the list of signals which depend on the signal SIG."))
+
 (defgeneric remove-signal-dependent (sig dep)
+  (:method (sig dep) (declare (ignore sig dep)) nil)
   (:documentation "Internal:  Remove DEP from the list of signals which depend on the signal SIG."))
 
 (defgeneric mark-signal-dirty (sig)
