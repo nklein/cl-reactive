@@ -43,7 +43,10 @@
                                                  "let"
                                                  "flet"))
                  (:file "apply" :depends-on ("package"
-                                             "functions"))))))
+                                             "functions"))
+                 (:file "reduce" :depends-on ("package"
+                                              "variables"
+                                              "functions"))))))
 
 (asdf:defsystem #:cl-reactive-tests
   :description "Tests for the CL-REACTIVE package."
@@ -64,7 +67,8 @@
                  (:file "count-t" :depends-on ("package-t"))
                  (:file "if-t" :depends-on ("package-t"))
                  (:file "on-change-t" :depends-on ("package-t"))
-                 (:file "apply" :depends-on ("package-t"))))))
+                 (:file "apply-t" :depends-on ("package-t"))
+                 (:file "reduce-t" :depends-on ("package-t"))))))
 
 (defmethod asdf:perform ((op asdf:test-op)
                          (system (eql (asdf:find-system :cl-reactive))))

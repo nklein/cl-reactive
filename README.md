@@ -219,7 +219,7 @@ function dependent on SIG is updated so if SIG is updated multiple
 times within a single WITH-SIGNAL-UPDATES-DEFERRED section, this count
 would likely not reflect all of those updates.
 
-## Selecting Between Signals
+### Selecting Between Signals
 
 The `SIGNAL-IF` function takes three arguments: `SIG-COND`, `SIG-TRUE`, and `SIG-FALSE`.  It returns a signal function whose value is that of `SIG-TRUE` if `SIG-COND` is non-NIL and the value of `SIG-FALSE` otherwise.
 
@@ -230,7 +230,7 @@ It is often convenient to use a constant value in place of either
 
     (signal-if sig-cond :yes :no)
 
-## Triggering Only On Changes
+### Triggering Only On Changes
 
 A signal function will be triggered each time one of the signals it
 depends upon is changed.  Sometimes, the signal function will
@@ -266,7 +266,7 @@ only trigger on positive zero crossings, for example:
                    (plusp b))))
       (signal-on-change sig :test #'positive-crossing-p))
 
-## Signal as a Function of Other Signal Values
+### Signal as a Function of Other Signals
 
 The `SIGNAL-APPLY` function creates a signal function whose value is
 obtained by applying a given function `FN` to the values of a list
@@ -289,3 +289,65 @@ Of course, one could also have written the previous example like this:
 
     (signal-apply (lambda (s) (position #\A s :from-end t))
                   (list sig-string))
+
+### Reducing a List of Signals
+
+The `SIGNAL-REDUCE` function creates a signal function of whose value
+is that of `CL:REDUCE` when run on a given list of signals.
+
+    (defun signal-reduce (fn signals &key
+                                       (from-end nil from-end-p)
+                                       (start nil startp)
+                                       (end nil endp)
+                                       (initial-value nil initial-value-p)
+                                       (key nil keyp)
+                                       (type t)
+                                       documentation) ...)
+
+The `TYPE` parameter gives the type specifier for the resulting
+signal.  The `DOCUMENTATION` is used to document the resulting signal
+function.  The `FROM-END`, `START`, `END`, `INITIAL-VALUE`, and `KEY`
+parameters are passed directly to `CL:REDUCE`.
+
+Note: The `START` and `END` do not make as much sense here as they do
+in `CL:REDUCE`.  Here, if one uses `START` and/or `END` to specify a
+(proper) sublist of `SIGNALS`, the resulting signal function will
+depend on signals that are not used in calculating its value.  This
+means that it will be triggered at times when there is no hope that
+its value will change.  It makes more sense to trim the `SIGNALS` list
+before calling `SIGNAL-REDUCE`.
+
+If one has some number of input signals in the list `SIGNALS` and
+wants a signal which is the product of those signals, then one might
+do the following:
+
+    (signal-reduce #'* signals :initial-value 1)
+
+## A Word About Mutability
+
+It is perfectly possible to create a signal whose value is a `LIST`:
+
+    (defsignal-variable *properties* (list :a 1 :b 2 :c 3)
+                        :type list
+                        :documentation "ABC properties.")
+
+The behavior of the system is undefined if the signal value is
+destructively modified:
+
+    (nreverse (signal-value *properties*))  ; Bad!
+
+Any number of other signals and functions may be looking at that list
+at any point in time.  Additionally, such destructive changes do not
+trigger signals which depend on the value to be notified that it
+changed.
+
+The `CL-REACTIVE` package makes no attempt to enforce the immutability
+of the signal values.  It is incumbent on those using `CL-REACTIVE` to
+ensure that they do not mutate any values used as signal values.
+
+The behavior of the system is also undefined if any signal variable is
+rebound.  For example:
+
+    (defsignal-variable *x* 0)
+    ...
+    (setf *x* (signal-let ((new-x 0)) new-x))

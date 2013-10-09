@@ -13,4 +13,5 @@
   (:export #:signal-if)
   (:export #:signal-on-change)
   (:export #:signal-apply)
+  (:export #:signal-reduce)
   (:documentation "This package provides reactive functions which can depend on other reactive functions or signals."))

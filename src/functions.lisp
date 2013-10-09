@@ -12,12 +12,13 @@
                                          depends-on
                                        &allow-other-keys)
   "Internal: After initializing the SIGNAL-FUNCTION instance SIG, register its dependencies and prepare a finalization method that will remove those dependencies when the function is garbage collected."
-  (dolist (dependee depends-on)
-    (add-signal-dependent dependee sig))
+  (let ((depends-on (copy-seq depends-on)))
+    (dolist (dependee depends-on)
+      (add-signal-dependent dependee sig))
 
-  (finalize sig (lambda ()
-                  (dolist (dependee depends-on)
-                    (remove-signal-dependent dependee nil)))))
+    (finalize sig (lambda ()
+                    (dolist (dependee depends-on)
+                      (remove-signal-dependent dependee nil))))))
 
 (defun signal-function (function depends-on &key (type t) documentation)
   "Internal: create a SIGNAL-FUNCTION instance with the given FUNCTION which depends on the list of signals DEPENDS-ON, has the given TYPE, and the given DOCUMENTATION."
