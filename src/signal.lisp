@@ -30,8 +30,8 @@
   "Internal: print the SIGNAL-BASE object SIG to the given STREAM."
   (if *print-readably*
       (call-next-method)
-      (print-unreadable-object (sig stream :type t)
-        (format stream ":VALUE ~A :TYPE ~A"
+      (print-unreadable-object (sig stream :type t :identity t)
+        (format stream "~S ~A"
                 (with-signal-locked (sig)
                   (if (slot-boundp sig 'value)
                       (%signal-value sig)

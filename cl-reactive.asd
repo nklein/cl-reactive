@@ -31,10 +31,25 @@
                  (:file "flet" :depends-on ("package"
                                             "variables"
                                             "functions"
-                                            "let"))))))
+                                            "let"))
+                 (:file "count" :depends-on ("package"
+                                             "flet"))
+                 (:file "if" :depends-on ("package"
+                                          "variables"
+                                          "functions"))
+                 (:file "on-change" :depends-on ("package"
+                                                 "variables"
+                                                 "functions"
+                                                 "let"
+                                                 "flet"))
+                 (:file "apply" :depends-on ("package"
+                                             "functions"))
+                 (:file "reduce" :depends-on ("package"
+                                              "variables"
+                                              "functions"))))))
 
 (asdf:defsystem #:cl-reactive-tests
-  :description "CL-REACTIVE is a reactive-programming package for Common Lisp."
+  :description "Tests for the CL-REACTIVE package."
   :author "Patrick Stein <pat@nklein.com>"
   :license "UNLICENSE"
   :depends-on (#:cl-reactive #:nst)
@@ -48,7 +63,12 @@
                  (:file "flet-t" :depends-on ("package-t"
                                               "variables-t"))
                  (:file "dependents-t" :depends-on ("package-t"
-                                                    "variables-t"))))))
+                                                    "variables-t"))
+                 (:file "count-t" :depends-on ("package-t"))
+                 (:file "if-t" :depends-on ("package-t"))
+                 (:file "on-change-t" :depends-on ("package-t"))
+                 (:file "apply-t" :depends-on ("package-t"))
+                 (:file "reduce-t" :depends-on ("package-t"))))))
 
 (defmethod asdf:perform ((op asdf:test-op)
                          (system (eql (asdf:find-system :cl-reactive))))
