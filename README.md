@@ -3,7 +3,8 @@
 
 The `CL-REACTIVE` package provides support for reactive programming in
 Common Lisp at the function level.  In reactive programming, changing
-the value of a variable.
+the value of a variable causes other variables to be updated and other
+functions to be invoked.
 
 The common example of reactive programming is a spreadsheet where
 changing the value of one cell causes a variety of other cells to be
