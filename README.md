@@ -184,3 +184,28 @@ Neither `SIG-MAX` nor `SIG-MIN` will be updated when `MX` and `MY` are
 assigned.  The `SIG-MAX` signal will be updated when it is used to
 create the `LIST`.  The `SIG-MIN` signal will not be updated until the
 `WITH-SIGNAL-UPDATES-DEFERRED` section ends.
+
+## Composing Signals
+
+The fundamental signal operations above can be composed in a variety
+of ways to make more powerful signal constructs.  This section
+describes the functions `CL-REACTIVE` provides for composing signals.
+
+### Counting Signal Updates
+
+The `SIGNAL-COUNT` function creates a signal function that returns the
+number of times the signal SIG has been updated.
+
+    (defun signal-count (sig &key documentation) ...)
+
+So, for example, to count the number of updates to `SIG-X` in a given
+section of code, one might do:
+
+    (with-signal-values ((count-x (signal-count sig-x)))
+      ... whatever code one wants here ...
+      count-x)
+
+Note: This count actually reflects the number of times that a signal
+function dependent on SIG is updated so if SIG is updated multiple
+times within a single WITH-SIGNAL-UPDATES-DEFERRED section, this count
+would likely not reflect all of those updates.

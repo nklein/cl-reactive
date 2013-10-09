@@ -9,4 +9,5 @@
   (:export #:signal-let)
   (:export #:signal-flet)
   (:export #:with-signal-updates-deferred)
+  (:export #:signal-count)
   (:documentation "This package provides reactive functions which can depend on other reactive functions or signals."))
