@@ -229,3 +229,39 @@ It is often convenient to use a constant value in place of either
 `SIG-TRUE` or `SIG-FALSE` (or both):
 
     (signal-if sig-cond :yes :no)
+
+## Triggering Only On Changes
+
+A signal function will be triggered each time one of the signals it
+depends upon is changed.  Sometimes, the signal function will
+recalculate its value and come up with the same result it did the last
+time.  With the `SIGNAL-ON-CHANGE` function, one can create a signal
+that triggers its dependents only when the value of its input signal
+changes.
+
+    (defun signal-on-change (sig &key (test #'equal) documentation) ...)
+
+The returned signal only triggers when `SIG` changes value.  The given
+`TEST` is used to tell when two values are the same.
+
+In the following example, the `SIGNAL-MAX-CHANGED` signal will not
+trigger its dependents even though the `SIGNAL-MAX` signal will.
+
+    (signal-let ((sig-x 100 :type integer)
+                 (sig-y 100 :type integer))
+      (signal-flet ((signal-max ((x sig-x) (y sig-y)) (max x y)))
+        (let ((signal-max-changed (signal-on-change signal-max)))
+          (with-signal-values ((x sig-x))
+            (setf x 50)))))
+
+One can poll the `SIGNAL-VALUE` at any time, but other signals which
+depend upon this one will not be triggered.
+
+The `TEST` function is passed the previous value followed by the new
+value of `SIG`.  One can use this to create specialized signals that
+only trigger on positive zero crossings, for example:
+
+    (flet ((positive-crossing-p (a b)
+              (and (or (minusp a) (zerop a))
+                   (plusp b))))
+      (signal-on-change sig :test #'positive-crossing-p))

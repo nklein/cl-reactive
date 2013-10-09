@@ -36,7 +36,12 @@
                                              "flet"))
                  (:file "if" :depends-on ("package"
                                           "variables"
-                                          "functions"))))))
+                                          "functions"))
+                 (:file "on-change" :depends-on ("package"
+                                                 "variables"
+                                                 "functions"
+                                                 "let"
+                                                 "flet"))))))
 
 (asdf:defsystem #:cl-reactive-tests
   :description "CL-REACTIVE is a reactive-programming package for Common Lisp."
@@ -55,7 +60,8 @@
                  (:file "dependents-t" :depends-on ("package-t"
                                                     "variables-t"))
                  (:file "count-t" :depends-on ("package-t"))
-                 (:file "if-t" :depends-on ("package-t"))))))
+                 (:file "if-t" :depends-on ("package-t"))
+                 (:file "on-change-t" :depends-on ("package-t"))))))
 
 (defmethod asdf:perform ((op asdf:test-op)
                          (system (eql (asdf:find-system :cl-reactive))))
