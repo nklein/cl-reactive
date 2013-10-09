@@ -265,3 +265,27 @@ only trigger on positive zero crossings, for example:
               (and (or (minusp a) (zerop a))
                    (plusp b))))
       (signal-on-change sig :test #'positive-crossing-p))
+
+## Signal as a Function of Other Signal Values
+
+The `SIGNAL-APPLY` function creates a signal function whose value is
+obtained by applying a given function `FN` to the values of a list
+`SIGNALS` of signals.
+
+    (defun signal-apply (fn signals &key (type t) documentation) ...)
+
+For example, if one needs a signal that tracks the sum of the signals
+`SIG-A`, `SIG-B`, and `SIG-C`, one can do:
+
+    (signal-apply #'+ (list sig-a sig-b sig-c))
+
+One can also take advantage of constant signals here to do fancier
+calculations.  This following example creates a signal that returns
+the position of the last character `A` in the value of `SIG-STRING`:
+
+    (signal-apply #'position (list #\A sig-string :from-end t))
+
+Of course, one could also have written the previous example like this:
+
+    (signal-apply (lambda (s) (position #\A s :from-end t))
+                  (list sig-string))

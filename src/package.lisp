@@ -12,4 +12,5 @@
   (:export #:signal-count)
   (:export #:signal-if)
   (:export #:signal-on-change)
+  (:export #:signal-apply)
   (:documentation "This package provides reactive functions which can depend on other reactive functions or signals."))
