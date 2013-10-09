@@ -209,3 +209,9 @@ Note: This count actually reflects the number of times that a signal
 function dependent on SIG is updated so if SIG is updated multiple
 times within a single WITH-SIGNAL-UPDATES-DEFERRED section, this count
 would likely not reflect all of those updates.
+
+## Selecting Between Signals
+
+The `SIGNAL-IF` function takes three arguments: `SIG-COND`, `SIG-TRUE`, and `SIG-FALSE`.  It returns a signal function whose value is that of `SIG-TRUE` if `SIG-COND` is non-NIL and the value of `SIG-FALSE` otherwise.
+
+    (defun signal-if (sig-cond sig-true sig-false &key documentation) ...)
