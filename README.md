@@ -221,7 +221,7 @@ would likely not reflect all of those updates.
 
 ### Selecting Between Signals
 
-The `SIGNAL-IF` function takes three arguments: `SIG-COND`, `SIG-TRUE`, and `SIG-FALSE`.  It returns a signal function whose value is that of `SIG-TRUE` if `SIG-COND` is non-NIL and the value of `SIG-FALSE` otherwise.
+The `SIGNAL-IF` function takes three arguments: `SIG-COND`, `SIG-TRUE`, and `SIG-FALSE`.  It returns a signal function whose value is that of `SIG-TRUE` if `SIG-COND` is non-`NIL` and the value of `SIG-FALSE` otherwise.
 
     (defun signal-if (sig-cond sig-true sig-false &key documentation) ...)
 
@@ -239,10 +239,16 @@ time.  With the `SIGNAL-ON-CHANGE` function, one can create a signal
 that triggers its dependents only when the value of its input signal
 changes.
 
-    (defun signal-on-change (sig &key (test #'equal) documentation) ...)
+    (defun signal-on-change (sig &key (key #'identity)
+                                      (test #'equal)
+                                      documentation)
+       ...)
 
 The returned signal only triggers when `SIG` changes value.  The given
-`TEST` is used to tell when two values are the same.
+`TEST` is used to tell when two values are the same.  The `KEY`
+function is invoked on the previous value and the current value then
+the `TEST` function is invoked with the results to determine whether
+the two values are equal.
 
 In the following example, the `SIGNAL-MAX-CHANGED` signal will not
 trigger its dependents even though the `SIGNAL-MAX` signal will.
@@ -257,14 +263,29 @@ trigger its dependents even though the `SIGNAL-MAX` signal will.
 One can poll the `SIGNAL-VALUE` at any time, but other signals which
 depend upon this one will not be triggered.
 
-The `TEST` function is passed the previous value followed by the new
-value of `SIG`.  One can use this to create specialized signals that
-only trigger on positive zero crossings, for example:
+The `TEST` function is passed the `KEY` of the previous value followed
+by the `KEY` of the new value of `SIG`.  One can use this to create
+specialized signals.  The following example triggers only on positive
+zero-crossings:
 
-    (flet ((positive-crossing-p (a b)
-              (and (or (minusp a) (zerop a))
-                   (plusp b))))
-      (signal-on-change sig :test #'positive-crossing-p))
+    (labels ((positive-crossing-p (a b)
+                (and (or (minusp a) (zerop a))
+                         (plusp b)))
+             (not-a-positive-crossing-p (a b)
+                (not (positive-crossing-p a b))))
+      (signal-on-change sig :test #'not-a-positive-crossing-p))
+
+Note: when the `TEST` returns non-`NIL`, there is no change.  As such,
+the test is the negation of when there is the desired change.  Another
+way one might create an equivalent signal is this:
+
+    (flet ((plusp-ish (a)
+             (if (plusp a) 1 0)))
+      (signal-on-change sig :key #'plusp-ish :test #'>=))
+
+Again, the `TEST` is used to tell when successive values are
+equivalent.  The `TEST` of `#'>=` is, thus, the opposite of when we
+want to trigger the signal: `#'<`.
 
 ### Signal as a Function of Other Signals
 

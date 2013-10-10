@@ -30,4 +30,19 @@
           (setf x 1
                 x 2
                 x 7)
+          (values mod5-changes all-changes)))))
+
+  (nst:def-test on-change-with-key-test (:values (:equal 2) (:equal 3))
+    (signal-let ((sig-x 0 :type integer))
+      (flet ((mod5 (a)
+               (mod a 5)))
+        (with-signal-values ((x sig-x)
+                             (mod5-changes (signal-count
+                                            (signal-on-change sig-x
+                                                              :key #'mod5)))
+                             (all-changes (signal-count
+                                           (signal-on-change sig-x))))
+          (setf x 1
+                x 2
+                x 7)
           (values mod5-changes all-changes))))))
