@@ -5,7 +5,8 @@
 (defclass signal-function (signal-base)
   ((func       :initarg :func       :reader   signal-func
                :documentation "Internal: the function used to calculate this signal's value from the values of the signals it depends upon."))
-  (:documentation "Internal: A SIGNAL-FUNCTION is a slot whose value is calculated as needed from the values of other signals it depends upon.  The signals can be either SIGNAL-VARIABLE instances or SIGNAL-FUNCTION instances."))
+  (:documentation "Internal: A SIGNAL-FUNCTION is a slot whose value is calculated as needed from the values of other signals it depends upon.  The signals can be either SIGNAL-VARIABLE instances or SIGNAL-FUNCTION instances.")
+  (:metaclass closer-mop:funcallable-standard-class))
 
 (defmethod initialize-instance :after ((sig signal-function)
                                        &key
@@ -15,6 +16,10 @@
   (let ((depends-on (copy-seq depends-on)))
     (dolist (dependee depends-on)
       (add-signal-dependent dependee sig))
+
+    (flet ((funcallable-function ()
+             (signal-value sig)))
+      (closer-mop:set-funcallable-instance-function sig #'funcallable-function))
 
     (finalize sig (lambda ()
                     (dolist (dependee depends-on)

@@ -4,7 +4,7 @@
   :description "CL-REACTIVE is a reactive-programming package for Common Lisp."
   :author "Patrick Stein <pat@nklein.com>"
   :license "UNLICENSE"
-  :depends-on (#:bordeaux-threads #:trivial-garbage #:anaphora)
+  :depends-on (#:bordeaux-threads #:closer-mop #:trivial-garbage #:anaphora)
   :components
   ((:module "src"
     :components ((:file "package")
