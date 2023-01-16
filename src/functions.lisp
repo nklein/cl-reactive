@@ -2,7 +2,7 @@
 
 (in-package #:cl-reactive)
 
-(defclass signal-function (signal-base)
+(defclass signal-function (signal-base function)
   ((func       :initarg :func       :reader   signal-func
                :documentation "Internal: the function used to calculate this signal's value from the values of the signals it depends upon."))
   (:documentation "Internal: A SIGNAL-FUNCTION is a slot whose value is calculated as needed from the values of other signals it depends upon.  The signals can be either SIGNAL-VARIABLE instances or SIGNAL-FUNCTION instances.")
