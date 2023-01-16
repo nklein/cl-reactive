@@ -15,12 +15,10 @@
 (defmethod remove-signal-dependent ((sig signal-base) dep)
   "Internal: remove the given DEP as a dependent of the SIGNAL-BASE instance SIG."
   (with-signal-locked (sig)
-    (flet ((remove-dep (dep deps)
-             (remove dep deps
-                     :key #'weak-pointer-value
-                     :test #'eq)))
-      (setf (signal-dependents sig)
-            (remove-dep nil (remove-dep dep (signal-dependents sig)))))))
+    (setf (signal-dependents sig)
+          (remove dep (signal-dependents sig)
+                  :key #'weak-pointer-value
+                  :test #'eq))))
 
 (defmethod mark-signal-dirty ((sig null))
   "Internal: If asked to mark dirty an expired weak-pointer, do nothing."

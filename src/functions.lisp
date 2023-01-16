@@ -2,7 +2,7 @@
 
 (in-package #:cl-reactive)
 
-(defclass signal-function (signal-base)
+(defclass signal-function (signal-base #-ccl function)
   ((func       :initarg :func       :reader   signal-func
                :documentation "Internal: the function used to calculate this signal's value from the values of the signals it depends upon."))
   (:documentation "Internal: A SIGNAL-FUNCTION is a slot whose value is calculated as needed from the values of other signals it depends upon.  The signals can be either SIGNAL-VARIABLE instances or SIGNAL-FUNCTION instances.")
@@ -23,7 +23,9 @@
 
     (finalize sig (lambda ()
                     (dolist (dependee depends-on)
-                      (remove-signal-dependent dependee nil))))))
+                      (remove-signal-dependent dependee sig))))))
+
+(trace remove-signal-dependent)
 
 (defun signal-function (function depends-on &key (type t) documentation)
   "Internal: create a SIGNAL-FUNCTION instance with the given FUNCTION which depends on the list of signals DEPENDS-ON, has the given TYPE, and the given DOCUMENTATION."

@@ -1,6 +1,6 @@
 ;;;; on-change-t.lisp
 
-(in-package #:cl-reactive-tests)
+(in-package #:cl-reactive/tests)
 
 (nst:def-test-group on-change-tests ()
   (nst:def-test simple-on-change-test (:values (:equal 2) (:equal 3))

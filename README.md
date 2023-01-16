@@ -372,3 +372,8 @@ rebound.  For example:
     (defsignal-variable *x* 0)
     ...
     (setf *x* (signal-let ((new-x 0)) new-x))
+
+## Credits
+
+Thanks to [Josh Cho](https://github.com/joshcho) for providing the fix
+for SBCL compile issues with the `SIGNAL-FUNCTION` class.

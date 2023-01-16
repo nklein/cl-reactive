@@ -1,6 +1,6 @@
 ;;;; variables-t.lisp
 
-(in-package #:cl-reactive-tests)
+(in-package #:cl-reactive/tests)
 
 (defsignal-variable *sig-x* nil
   :documentation "General signal used in variable tests.")

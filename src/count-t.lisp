@@ -1,6 +1,6 @@
 ;;;; count-t.lisp
 
-(in-package #:cl-reactive-tests)
+(in-package #:cl-reactive/tests)
 
 (nst:def-test-group count-tests ()
   (nst:def-test simple-count-test (:equal 2)

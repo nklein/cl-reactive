@@ -1,6 +1,6 @@
 ;;;; dependents-t.lisp
 
-(in-package #:cl-reactive-tests)
+(in-package #:cl-reactive/tests)
 
 (nst:def-test-group dependents-tests ()
   (nst:def-test signal-function-evaluates-immediately (:equal 2)

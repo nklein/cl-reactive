@@ -1,6 +1,6 @@
 ;;;; flet-t.lisp
 
-(in-package #:cl-reactive-tests)
+(in-package #:cl-reactive/tests)
 
 (nst:def-test-group signal-flet-tests ()
   (nst:def-test flet-then-query (:equal 1)

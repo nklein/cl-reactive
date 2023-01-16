@@ -1,6 +1,6 @@
 ;;;; reduce-t.lisp
 
-(in-package #:cl-reactive-tests)
+(in-package #:cl-reactive/tests)
 
 (nst:def-test-group reduce-tests ()
   (nst:def-test simple-reduce-test (:equal 7)

@@ -1,6 +1,6 @@
 ;;;; with-t.lisp
 
-(in-package #:cl-reactive-tests)
+(in-package #:cl-reactive/tests)
 
 (nst:def-test-group with-signals-tests ()
   (nst:def-test let-then-query (:equal :x)

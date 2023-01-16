@@ -4,7 +4,9 @@
   :description "CL-REACTIVE is a reactive-programming package for Common Lisp."
   :author "Patrick Stein <pat@nklein.com>"
   :license "UNLICENSE"
+  :version "0.5.20230116"
   :depends-on (#:bordeaux-threads #:closer-mop #:trivial-garbage #:anaphora)
+  :in-order-to ((asdf:test-op (asdf:test-op :cl-reactive/tests)))
   :components
   ((:module "src"
     :components ((:file "package")
@@ -48,11 +50,14 @@
                                               "variables"
                                               "functions"))))))
 
-(asdf:defsystem #:cl-reactive-tests
+(asdf:defsystem #:cl-reactive/tests
   :description "Tests for the CL-REACTIVE package."
   :author "Patrick Stein <pat@nklein.com>"
   :license "UNLICENSE"
-  :depends-on (#:cl-reactive #:nst)
+  :version "0.5.20230116"
+  :depends-on ((:version #:cl-reactive "0.5.20230116") #:nst)
+  :perform (asdf:test-op (o c)
+             (uiop:symbol-call :cl-reactive/tests :run-all-tests))
   :components
   ((:module "src"
     :components ((:file "package-t")
@@ -69,8 +74,3 @@
                  (:file "on-change-t" :depends-on ("package-t"))
                  (:file "apply-t" :depends-on ("package-t"))
                  (:file "reduce-t" :depends-on ("package-t"))))))
-
-(defmethod asdf:perform ((op asdf:test-op)
-                         (system (eql (asdf:find-system :cl-reactive))))
-  (asdf:load-system :cl-reactive-tests)
-  (funcall (find-symbol (symbol-name :run-tests) :cl-reactive-tests)))

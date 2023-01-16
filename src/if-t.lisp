@@ -1,6 +1,6 @@
 ;;;; if-t.lisp
 
-(in-package #:cl-reactive-tests)
+(in-package #:cl-reactive/tests)
 
 (nst:def-test-group if-tests ()
   (nst:def-test simple-if-test (:values (:equal :yes) (:equal :no))

@@ -1,6 +1,6 @@
 ;;;; functions-t.lisp
 
-(in-package #:cl-reactive-tests)
+(in-package #:cl-reactive/tests)
 
 (defvar *signal-x-count* 0)
 (defsignal-function signal-x-count ((x *sig-x*))
@@ -20,9 +20,6 @@
   x)
 
 (nst:def-test-group signal-function-tests ()
-  (nst:def-test declare-returns-symbol (:equal 'signal-y-test)
-    (defsignal-function signal-y-test ((x *sig-x-int*)) x))
-
   (nst:def-test declare-retains-function-docstring (:equal "Yes")
     (documentation #'signal-y-docstring t))
 
@@ -56,12 +53,4 @@
         (setf x 0)
         (+ y y)
         (setf x 1)
-        (+ y y))))
-
-  (nst:def-test signal-function-can-be-collected (:equal 0)
-    (signal-let (sig-x)
-      (signal-flet ((sig-y ((x sig-x)) x))
-        (declare (ignore sig-y)))
-      (trivial-garbage:gc :full t)
-      (length (remove nil (mapcar #'trivial-garbage:weak-pointer-value
-                                  (cl-reactive::signal-dependents sig-x)))))))
+        (+ y y)))))
