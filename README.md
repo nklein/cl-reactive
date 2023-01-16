@@ -34,6 +34,10 @@ querying signal values, defining new signal variables, defining new
 signal functions, and delaying eager recalculation of signal
 functions.
 
+There is a predicate `SIGNALP` to tell whether something is a signal.
+
+    (signalp obj) => t if signal and nil otherwise
+
 ### Querying Signal Values
 
 Given a signal `SIG`, one can query its value with the `SIGNAL-VALUE`

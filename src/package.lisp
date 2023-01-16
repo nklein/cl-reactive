@@ -2,6 +2,7 @@
 
 (defpackage #:cl-reactive
   (:use #:cl #:trivial-garbage #:anaphora)
+  (:export #:signalp)
   (:export #:signal-value)
   (:export #:defsignal-variable)
   (:export #:defsignal-function)

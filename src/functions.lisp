@@ -63,11 +63,9 @@
       (when (and (stringp (first body))
                  (rest body))
         (setf body (rest body)))
-      `(progn
-         (defvar ,just-name (signal-flet (((,sig ,@(rest name)) ,depends
-                                           ,@body))
-                              ,sig))
-         (defun ,just-name ()
-           ,@(when documentationp
-               `(,documentation))
-           (signal-value ,just-name))))))
+      `(defvar ,just-name
+         (setf (symbol-function ',just-name)
+               (signal-flet (((,sig ,@(rest name)) ,depends
+                              ,@body))
+                 ,sig))
+         ,documentation))))

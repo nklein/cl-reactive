@@ -12,12 +12,6 @@
     (signal-let ((sig-x nil :documentation "Yes"))
       (documentation sig-x t)))
 
-  #+not
-  (nst:def-test let-then-query (:equal :x)
-    (signal-let ((sig-x :x))
-      (with-signal-values ((x sig-x))
-        x)))
-
   (nst:def-test let-then-set-then-query (:equal t)
     (signal-let (sig-x)
       (with-signal-values ((x sig-x))

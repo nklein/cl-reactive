@@ -15,6 +15,10 @@
                   :documentation "Internal: documentation for this signal variable."))
   (:documentation "Internal: This class forms the base class for SIGNAL-VARIABLE and SIGNAL-FUNCTION classes.  It holds those items common to both.  SIGNAL-VARIABLE instances can have their SIGNAL-VALUEs set.  SIGNAL-FUNCTION instance can depend on SIGNAL-VALUEs or SIGNAL-FUNCTIONS.  A SIGNAL-FUNCTION instance is triggered when a SIGNAL-VALUE it depends (directly or transitively) changes."))
 
+(defun signalp (x)
+  "Predicate to test whether an object is a SIGNAL."
+  (typep x 'signal-base))
+
 (defmacro with-signal-locked ((sig) &body body)
   "Internal: Execute the given BODY with the mutex of the signal SIG locked."
   `(bt:with-lock-held ((signal-mutex ,sig))

@@ -14,6 +14,9 @@
   (nst:def-test declare-keeps-documentation (:true)
     (documentation *sig-x* t))
 
+  (nst:def-test signal-variables-are-signals (:true)
+    (signalp *sig-x*))
+
   (nst:def-test declare-then-query (:equal :x)
     (progn
       (with-signal-values ((x *sig-x*))

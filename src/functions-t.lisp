@@ -20,6 +20,9 @@
   x)
 
 (nst:def-test-group signal-function-tests ()
+  (nst:def-test declare-returns-symbol (:equal 'signal-y-test)
+    (defsignal-function signal-y-test ((x *sig-x-int*)) x))
+
   (nst:def-test declare-retains-function-docstring (:equal "Yes")
     (documentation #'signal-y-docstring t))
 
@@ -31,6 +34,9 @@
 
   (nst:def-test declare-retains-signal-documentation (:equal "Yes")
     (documentation signal-y-documentation t))
+
+  (nst:def-test signal-functions-are-signals (:true)
+    (signalp #'signal-y-test))
 
   (nst:def-test signal-x-count-called (:values (:equal 1) (:equal 1))
     (let ((*signal-x-count* 0))
